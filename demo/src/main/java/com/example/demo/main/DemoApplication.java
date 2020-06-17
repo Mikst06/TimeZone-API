@@ -59,10 +59,11 @@ public class DemoApplication {
 				String uriString = UriComponentsBuilder.fromUriString(uri).buildAndExpand(pathVariableMap)
 						.toUriString();
 
+				Timezone timezone = new Timezone();
+
 				try{
-					Timezone timezone = restTemplate.getForObject(uriString, Timezone.class);
-					System.out.print("\n\n\nTime for area: \t" + timezone.getDateTime());
-				}
+					timezone = restTemplate.getForObject(uriString, Timezone.class);
+					System.out.format("\n\n\nTime for area: \t%s",timezone.getDateTime());}
 				catch (HttpClientErrorException exc) {
 					log.info("HttpStatusCodeException: {}",exc.getStatusCode());
 					for (String t:timeZones) {
@@ -76,9 +77,7 @@ public class DemoApplication {
 			catch (HttpServerErrorException exc) {
 				log.info("HttpStatusCodeException: {}",exc.getStatusCode());
 			}
-
-
-
+			System.out.println();
 		};
 	}
 
