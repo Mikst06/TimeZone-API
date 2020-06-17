@@ -17,6 +17,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -47,7 +48,7 @@ public class DemoApplication {
 
 				List<String> timeZones = zonesResponse.getBody();
 
-				String areaLocation = "Europe/London";
+				String areaLocation = "Europe";
 				String uri = "http://worldtimeapi.org/api/timezone/{areaLocation}";
 
 				Map<String, String> pathVariableMap = new HashMap<>();
@@ -61,19 +62,30 @@ public class DemoApplication {
 					timezone = restTemplate.getForObject(uriString, Timezone.class);
 					System.out.format("\n\n\nTime for area: \t%s",timezone.getDateTime());}
 				catch (HttpClientErrorException exc) {
-					log.info("HttpStatusCodeException: {}",exc.getStatusCode());
+					System.out.println();
+					log.info("HttpStatusCodeException: {}\n\n",exc.getStatusCode());
+
 					for (String t:timeZones) {
 						System.out.println(t);
 					}
 				}
 				catch (HttpServerErrorException exc) {
+					System.out.println();
 					log.info("HttpStatusCodeException: {}",exc.getStatusCode());
+				}
+				catch (RestClientException exc) {
+					System.out.println();
+					log.info("WRONG INPUT");
+
+					for (String t:timeZones) {
+						System.out.println(t);
+					}
 				}
 			}
 			catch (HttpServerErrorException exc) {
+				System.out.println();
 				log.info("HttpStatusCodeException: {}",exc.getStatusCode());
 			}
-			System.out.println();
 		};
 	}
 
