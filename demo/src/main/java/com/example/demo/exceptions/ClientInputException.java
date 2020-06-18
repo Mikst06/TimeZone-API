@@ -2,7 +2,8 @@ package com.example.demo.exceptions;
 
 public class ClientInputException extends RuntimeException {
 
-    public ClientInputException() {
-        super();
+    public ClientInputException(String errorMessage, Throwable err) {
+        super(errorMessage, err);
     }
+
 }
