@@ -1,10 +1,11 @@
 package com.example.demo.app;
 
+import com.example.demo.other.TimeZonesList;
 import com.example.demo.other.Timezone;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import com.example.demo.other.TimezoneRest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
@@ -12,14 +13,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @SpringBootApplication
 public class DemoApplication {
@@ -34,36 +31,22 @@ public class DemoApplication {
 	public RestTemplate restTemplate(RestTemplateBuilder builder) {
 		return builder.build();
 	}
-
 	@Bean
 	public CommandLineRunner run(RestTemplate restTemplate) {
 
 		return args -> {
 
 			try{
-				ResponseEntity<List<String>> zonesResponse =
-						restTemplate.exchange("http://worldtimeapi.org/api/timezone",
-								HttpMethod.GET, null, new ParameterizedTypeReference<List<String>>() {
-								});
+				List<String> timeZones = TimeZonesList.returnTimeZoneList(restTemplate);
 
-				List<String> timeZones = zonesResponse.getBody();
-
-				String areaLocation = "Europe";
-				String uri = "http://worldtimeapi.org/api/timezone/{areaLocation}";
-
-				Map<String, String> pathVariableMap = new HashMap<>();
-				pathVariableMap.put("areaLocation", areaLocation);
-				String uriString = UriComponentsBuilder.fromUriString(uri).buildAndExpand(pathVariableMap)
-						.toUriString();
-
-				Timezone timezone = new Timezone();
+				String areaLocation = "Europe/London";
 
 				try{
-					timezone = restTemplate.getForObject(uriString, Timezone.class);
+					Timezone timezone = TimezoneRest.returnTimeZoneList(restTemplate, areaLocation);
 					System.out.format("\n\n\nTime for area: \t%s",timezone.getDateTime());}
 				catch (HttpClientErrorException exc) {
 					System.out.println();
-					log.info("HttpStatusCodeException: {}\n\n",exc.getStatusCode());
+					System.out.format("\nHttpStatusCodeException: %s\n\n",exc.getStatusCode());
 
 					for (String t:timeZones) {
 						System.out.println(t);
@@ -71,7 +54,7 @@ public class DemoApplication {
 				}
 				catch (HttpServerErrorException exc) {
 					System.out.println();
-					log.info("HttpStatusCodeException: {}",exc.getStatusCode());
+					System.out.format("\nHttpStatusCodeException: %s",exc.getStatusCode());
 				}
 				catch (RestClientException exc) {
 					System.out.println();
@@ -84,8 +67,10 @@ public class DemoApplication {
 			}
 			catch (HttpServerErrorException exc) {
 				System.out.println();
-				log.info("HttpStatusCodeException: {}",exc.getStatusCode());
+				System.out.format("\nHttpStatusCodeException: %s",exc.getStatusCode());
 			}
+
+			System.out.println();
 		};
 	}
 
