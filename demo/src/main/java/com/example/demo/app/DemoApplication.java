@@ -39,7 +39,7 @@ public class DemoApplication {
 			try{
 				List<String> timeZones = TimeZonesList.returnTimeZoneList(restTemplate);
 
-				String areaLocation = "Europe/London";
+				String areaLocation = args[0];
 
 				try{
 					Timezone timezone = TimezoneRest.returnTimeZoneList(restTemplate, areaLocation);
