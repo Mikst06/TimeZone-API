@@ -33,8 +33,7 @@ public class RestTemplateWrapper {
     public ResponseEntity<List<String>> exchange(String uri, HttpMethod httpMethod) {
         try {
             return restTemplate.exchange(uri,
-                    httpMethod, null, new ParameterizedTypeReference<List<String>>() {
-                    });
+                    httpMethod, null, new ParameterizedTypeReference<List<String>>() {});
         } catch (HttpServerErrorException exc) {
             LOG.info(HTTP_STATUS_CODE_EXCEPTION, exc.getStatusCode());
 

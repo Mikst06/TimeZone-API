@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Timezone;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,9 +17,7 @@ public class TimeZoneService {
 
     private final RestTemplateWrapper restTemplateWrapper;
 
-    public TimeZoneService(RestTemplateWrapper restTemplateWrapper) {
-        this.restTemplateWrapper = restTemplateWrapper;
-    }
+    public TimeZoneService(RestTemplateWrapper restTemplateWrapper) { this.restTemplateWrapper = restTemplateWrapper; }
 
     public Timezone getDatetime(String areaLocation) {
         return restTemplateWrapper.exchange(URI_AREA_LOCATION, areaLocation);
