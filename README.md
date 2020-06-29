@@ -1,5 +1,5 @@
 # TimeZone-API-Application
-Spring text application made for internship to Broadridge company
+Spring text application
 
 On Windows<br/>
 To compile app from Command Shell level move to demo directory then type: gradlew build,<br/> then gradlew run --args='argument',
