@@ -1,4 +1,4 @@
-# TimeZone-API-Application
+# TimeZone-API
 Spring text application
 
 On Windows<br/>
